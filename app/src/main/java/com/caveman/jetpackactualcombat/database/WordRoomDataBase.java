@@ -1,9 +1,11 @@
 package com.caveman.jetpackactualcombat.database;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.caveman.jetpackactualcombat.bean.Word;
 import com.caveman.jetpackactualcombat.dao.WordDao;
@@ -26,11 +28,21 @@ public abstract  class WordRoomDataBase extends RoomDatabase{
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WordRoomDataBase.class, "word_database")
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback =
+            new RoomDatabase.Callback(){
+
+                @Override
+                public void onOpen (SupportSQLiteDatabase db){
+                    super.onOpen(db);
+                }
+            };
 
 }
